@@ -264,6 +264,16 @@
                 <li><a href="#between" id="nav-between" class="nav-item w-full text-left px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 transition-colors">9. BETWEEN</a></li>
                 <li><a href="#strings" id="nav-strings" class="nav-item w-full text-left px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 transition-colors">10. Zeichenketten</a></li>
             </ul>
+            <!-- Gruppe: Mehrere Tabellen -->
+            <div class="px-6 pt-3 pb-1 border-t border-gray-100">
+                <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Mehrere Tabellen</span>
+            </div>
+            <ul class="space-y-1 mb-2">
+                <li><a href="#joins" id="nav-joins" class="nav-item w-full text-left px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 transition-colors">11. INNER JOIN</a></li>
+                <li><a href="#leftjoin" id="nav-leftjoin" class="nav-item w-full text-left px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 transition-colors">12. LEFT JOIN</a></li>
+                <li><a href="#rightjoin" id="nav-rightjoin" class="nav-item w-full text-left px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 transition-colors">13. RIGHT JOIN</a></li>
+                <li><a href="#fulljoin" id="nav-fulljoin" class="nav-item w-full text-left px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 transition-colors">14. FULL JOIN</a></li>
+            </ul>
             <!-- Gruppe: Abschluss -->
             <div class="px-6 pt-3 pb-1 border-t border-gray-100">
                 <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Abschluss</span>
@@ -313,7 +323,11 @@
                 
                 <!-- Simulation Header -->
                 <div class="p-4 border-b border-[#e2e8f0] bg-[#f8fafc] flex justify-between items-center">
-                    <span style="color: var(--color-primary)" class="font-bold text-sm">Live Datenbank Vorschau: <code class="bg-gray-100 px-2 py-1 rounded text-xs text-gray-800 border border-gray-200">tabelle: filme</code></span>
+                    <div class="flex items-center gap-2">
+                        <span style="color: var(--color-primary)" class="font-bold text-sm hidden lg:inline">Tabellen:</span>
+                        <button onclick="showPreviewTable('filme')" id="btn-tab-filme" class="px-3 py-1 rounded text-xs font-bold border-2 border-[var(--color-primary)] text-[var(--color-primary)] bg-[var(--color-secondary)] shadow-[2px_2px_0_0_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none transition">tabelle: filme</button>
+                        <button onclick="showPreviewTable('regisseure')" id="btn-tab-regisseure" class="px-3 py-1 rounded text-xs font-bold border-2 border-[var(--color-primary)] text-[var(--color-primary)] bg-white hover:bg-[var(--color-secondary)] shadow-[2px_2px_0_0_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none transition">tabelle: regisseure</button>
+                    </div>
                     <button onclick="resetData()" class="text-xs font-semibold px-2 py-1 rounded text-[#054e6f] hover:bg-[#e0f2fe]">Reset Simulation</button>
                 </div>
 
@@ -323,7 +337,7 @@
                     <!-- Query Builder Display -->
                     <div style="background-color: var(--color-primary); border-left: 6px solid var(--color-secondary);" class="rounded-lg p-4 font-mono text-sm text-white shadow-md">
                         <div class="text-xs text-[#7cd7c2] mb-2 uppercase tracking-wide font-bold">Aktueller Query</div>
-                        <div id="query-display" aria-live="polite" aria-label="Aktueller SQL-Query" class="font-bold text-lg leading-relaxed">SELECT * FROM filme;</div>
+                        <div id="query-display" aria-live="polite" aria-label="Aktueller SQL-Query" class="font-bold text-lg leading-relaxed whitespace-pre-wrap">SELECT * FROM filme;</div>
                     </div>
 
                     <!-- Interactive Controls Area -->
@@ -377,6 +391,11 @@
             <a href="#datetime"      onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">8. DATETIME</a>
             <a href="#between"       onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">9. BETWEEN</a>
             <a href="#strings"       onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">10. Zeichenketten</a>
+            <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mt-4 mb-2">Mehrere Tabellen</p>
+            <a href="#joins"         onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">11. INNER JOIN</a>
+            <a href="#leftjoin"      onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">12. LEFT JOIN</a>
+            <a href="#rightjoin"     onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">13. RIGHT JOIN</a>
+            <a href="#fulljoin"      onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">14. FULL JOIN</a>
             <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mt-4 mb-2">Abschluss</p>
             <a href="#summary"       onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">Zusammenfassung &amp; Quiz</a>
         </nav>
@@ -385,18 +404,32 @@
     <script>
         // --- Data Source ---
         const rawData = [
-            { id: 1, titel: "Inception", jahr: 2010, genre: "Action", rating: 8.8, eingetragen_am: "2024-09-01T10:15:00" },
-            { id: 2, titel: "The Dark Knight", jahr: 2008, genre: "Action", rating: 9.0, eingetragen_am: "2024-09-01T10:20:00" },
-            { id: 3, titel: "Interstellar", jahr: 2014, genre: "Sci-Fi", rating: 8.6, eingetragen_am: "2024-09-02T08:00:00" },
-            { id: 4, titel: "Toy Story", jahr: 1995, genre: "Animation", rating: 8.3, eingetragen_am: "2023-03-15T12:30:00" },
-            { id: 5, titel: "Pulp Fiction", jahr: 1994, genre: "Crime", rating: 8.9, eingetragen_am: "2022-11-10T09:45:00" },
-            { id: 6, titel: "The Matrix", jahr: 1999, genre: "Action", rating: 8.7, eingetragen_am: "2021-06-05T14:05:00" },
-            { id: 7, titel: "Forrest Gump", jahr: 1994, genre: "Drama", rating: 8.8, eingetragen_am: "2019-05-20T11:00:00" },
-            { id: 8, titel: "Parasite", jahr: 2019, genre: "Thriller", rating: 8.6, eingetragen_am: "2019-10-01T18:15:00" },
-            { id: 9, titel: "Avengers: Endgame", jahr: 2019, genre: "Action", rating: 8.4, eingetragen_am: "2020-02-14T16:45:00" },
-            { id: 10, titel: "Lion King", jahr: 1994, genre: "Animation", rating: 8.5, eingetragen_am: "2018-12-31T23:50:00" },
-            { id: 11, titel: "Joker", jahr: 2019, genre: "Crime", rating: 8.4, eingetragen_am: "2020-01-02T09:10:00" },
-            { id: 12, titel: "Tenet", jahr: 2020, genre: "Action", rating: 7.3, eingetragen_am: "2020-09-15T13:25:00" }
+            { id: 1, titel: "Inception", jahr: 2010, genre: "Action", rating: 8.8, regisseur_id: 1, eingetragen_am: "2024-09-01T10:15:00" },
+            { id: 2, titel: "The Dark Knight", jahr: 2008, genre: "Action", rating: 9.0, regisseur_id: 1, eingetragen_am: "2024-09-01T10:20:00" },
+            { id: 3, titel: "Interstellar", jahr: 2014, genre: "Sci-Fi", rating: 8.6, regisseur_id: 1, eingetragen_am: "2024-09-02T08:00:00" },
+            { id: 4, titel: "Toy Story", jahr: 1995, genre: "Animation", rating: 8.3, regisseur_id: 2, eingetragen_am: "2023-03-15T12:30:00" },
+            { id: 5, titel: "Pulp Fiction", jahr: 1994, genre: "Crime", rating: 8.9, regisseur_id: 3, eingetragen_am: "2022-11-10T09:45:00" },
+            { id: 6, titel: "The Matrix", jahr: 1999, genre: "Action", rating: 8.7, regisseur_id: 4, eingetragen_am: "2021-06-05T14:05:00" },
+            { id: 7, titel: "Forrest Gump", jahr: 1994, genre: "Drama", rating: 8.8, regisseur_id: 5, eingetragen_am: "2019-05-20T11:00:00" },
+            { id: 8, titel: "Parasite", jahr: 2019, genre: "Thriller", rating: 8.6, regisseur_id: null, eingetragen_am: "2019-10-01T18:15:00" },
+            { id: 9, titel: "Avengers: Endgame", jahr: 2019, genre: "Action", rating: 8.4, regisseur_id: 7, eingetragen_am: "2020-02-14T16:45:00" },
+            { id: 10, titel: "Lion King", jahr: 1994, genre: "Animation", rating: 8.5, regisseur_id: 8, eingetragen_am: "2018-12-31T23:50:00" },
+            { id: 11, titel: "Joker", jahr: 2019, genre: "Crime", rating: 8.4, regisseur_id: 9, eingetragen_am: "2020-01-02T09:10:00" },
+            { id: 12, titel: "Tenet", jahr: 2020, genre: "Action", rating: 7.3, regisseur_id: 1, eingetragen_am: "2020-09-15T13:25:00" }
+        ];
+
+        const regisseureData = [
+            { id: 1, name: "Christopher Nolan", land: "UK" },
+            { id: 2, name: "John Lasseter", land: "USA" },
+            { id: 3, name: "Quentin Tarantino", land: "USA" },
+            { id: 4, name: "Lana & Lilly Wachowski", land: "USA" },
+            { id: 5, name: "Robert Zemeckis", land: "USA" },
+            { id: 6, name: "Bong Joon-ho", land: "Südkorea" },
+            { id: 7, name: "Anthony & Joe Russo", land: "USA" },
+            { id: 8, name: "Rob Minkoff", land: "USA" },
+            { id: 9, name: "Todd Phillips", land: "USA" },
+            { id: 10, name: "Steven Spielberg", land: "USA" },
+            { id: 11, name: "Martin Scorsese", land: "USA" }
         ];
 
         // --- State Management ---
@@ -474,7 +507,7 @@
                     </p>
                 `,
                 controls: [
-                    { label: "Standard (Reset)", action: () => resetData(), query: "SELECT * FROM filme;" },
+                    { label: "Standard (Reset)", action: () => { resetData(); updateJoinViz(null); }, query: "SELECT * FROM filme;" },
                     { label: "ORDER BY rating DESC", action: () => sortData('rating', 'desc'), query: "SELECT * FROM filme ORDER BY rating DESC;" },
                     { label: "ORDER BY rating ASC", action: () => sortData('rating', 'asc'), query: "SELECT * FROM filme ORDER BY rating ASC;" },
                     { label: "ORDER BY jahr DESC", action: () => sortData('jahr', 'desc'), query: "SELECT * FROM filme ORDER BY jahr DESC;" },
@@ -500,7 +533,7 @@
                     </p>
                 `,
                 controls: [
-                    { label: "Reset", action: () => resetData(), query: "SELECT * FROM filme;" },
+                    { label: "Reset", action: () => { resetData(); updateJoinViz(null); }, query: "SELECT * FROM filme;" },
                     { 
                         label: "Genre ASC, Jahr DESC", 
                         action: () => sortDataMulti(['genre', 'asc'], ['jahr', 'desc']), 
@@ -639,7 +672,7 @@
                     </div>
                 `,
                 controls: [
-                    { label: "Reset", action: () => resetData(), query: "SELECT * FROM filme;" },
+                    { label: "Reset", action: () => { resetData(); updateJoinViz(null); }, query: "SELECT * FROM filme;" },
                     { label: "Rating 8.5–9.0", action: () => { setColumns(['titel', 'jahr', 'genre', 'rating']); filterData(row => row.rating >= 8.5 && row.rating <= 9.0); }, query: "SELECT * FROM filme WHERE rating BETWEEN 8.5 AND 9.0;" },
                     { label: "Jahr 2010–2019", action: () => { setColumns(['titel', 'jahr', 'genre', 'rating']); filterData(row => row.jahr >= 2010 && row.jahr <= 2019); }, query: "SELECT * FROM filme WHERE jahr BETWEEN 2010 AND 2019;" },
                     { label: "Eingetragen 2019", action: () => { setColumns(['titel', 'eingetragen_am']); filterData(row => row.eingetragen_am >= '2019-01-01T00:00:00' && row.eingetragen_am <= '2019-12-31T23:59:59'); }, query: "SELECT titel, eingetragen_am FROM filme WHERE eingetragen_am BETWEEN '2019-01-01' AND '2019-12-31';" },
@@ -870,6 +903,220 @@
                     }
                 ]
             },
+            'joins': {
+                title: "11. JOINS (INNER JOIN)",
+                content: `
+                    <p class="mb-4">
+                        Mit <code><a href="https://mariadb.com/kb/en/joins/" target="_blank" class="hover:underline">JOIN</a></code> können wir Daten aus <strong>mehreren Tabellen</strong> verknüpfen. 
+                        Das ist der Kern von relationalen Datenbanken.
+                    </p>
+                    <p class="mb-4 italic text-sm text-[var(--color-primary)]">
+                        <strong>Warum überhaupt zwei Tabellen?</strong> Das Prinzip: <br>
+                        <span class="block mt-2">Stell dir vor, du hast eine Filmliste und willst zu jedem Film den Regisseur speichern. Wenn du den Namen immer wieder neu eintippst, entstehen Tippfehler und Inkonsistenzen. Außerdem: Was, wenn du später Infos zum Regisseur ergänzen willst (z.B. Geburtsland)?</span>
+                        <span class="block mt-2">Deshalb speichern wir Regisseure in einer eigenen Tabelle – jeder bekommt eine ID. Im Film speichern wir nur die Regisseur-ID. So bleibt alles sauber und flexibel. Mit JOIN verbinden wir die Infos wieder zu einer vollständigen Ansicht!</span>
+                    </p>
+                    <div class="bg-white border border-gray-300 p-4 rounded-lg mb-6 shadow-sm">
+                        <h4 class="font-bold text-sm mb-2">Syntax</h4>
+                        <p class="text-sm font-mono leading-relaxed">
+                            SELECT filme.titel, regisseure.name<br>
+                            FROM filme<br>
+                            INNER JOIN regisseure <br>
+                            &nbsp;&nbsp;ON filme.regisseur_id = regisseure.id;
+                        </p>
+                    </div>
+                    <p class="mb-4">
+                        Stell dir vor, wir haben eine zweite Tabelle <code>regisseure</code>. 
+                        Wir verbinden sie über eine gemeinsame ID (den Fremdschlüssel).
+                    </p>
+                    <div class="bg-yellow-50 p-3 rounded-lg border-l-4 border-[var(--color-secondary)] text-sm mb-4">
+                        <strong>INNER JOIN:</strong> Zeigt nur Datensätze, bei denen es in <em>beiden</em> Tabellen eine Übereinstimmung gibt.
+                    </div>
+                `,
+                controls: [
+                    { label: "Nur Filme zeigen", action: () => { resetData(); updateJoinViz(null); }, query: "SELECT * FROM filme;" },
+                    { 
+                        label: "Filme + Regisseure (JOIN)", 
+                        action: () => { 
+                            const directors = {
+                                1: "Christopher Nolan", 2: "John Lasseter", 3: "Quentin Tarantino",
+                                4: "Lana & Lilly Wachowski", 5: "Robert Zemeckis", 6: "Bong Joon-ho",
+                                7: "Anthony & Joe Russo", 8: "Rob Minkoff", 9: "Todd Phillips",
+                                10: "Steven Spielberg", 11: "Martin Scorsese"
+                            };
+                            
+                            currentColumns = ['titel', 'genre', 'regisseur_name'];
+                            currentData = rawData
+                                .filter(r => r.regisseur_id !== null && directors[r.regisseur_id])
+                                .map(r => ({ 
+                                    titel: r.titel, 
+                                    genre: r.genre, 
+                                    regisseur_name: directors[r.regisseur_id] 
+                                })); 
+                            renderTable(); 
+                            updateJoinViz('inner');
+                        }, 
+                        query: "SELECT filme.titel, filme.genre, regisseure.name AS regisseur_name\nFROM filme\nINNER JOIN regisseure\nON filme.regisseur_id = regisseure.id;" 
+                    }
+                ]
+            },
+            'leftjoin': {
+                title: "12. LEFT JOIN",
+                content: `
+                    <p class="mb-4">
+                        Mit <code><a href="https://mariadb.com/kb/en/joins/" target="_blank" class="hover:underline">LEFT JOIN</a></code> werden <strong>alle Datensätze der linken Tabelle</strong> (in unserem Fall <code>filme</code>) angezeigt, auch wenn es in der rechten Tabelle (z. B. <code>regisseure</code>) keine Entsprechung gibt.
+                    </p>
+                    <div class="bg-white border border-gray-300 p-4 rounded-lg mb-6 shadow-sm">
+                        <h4 class="font-bold text-sm mb-2">Syntax</h4>
+                        <p class="text-sm font-mono leading-relaxed">
+                            SELECT filme.titel, regisseure.name<br>
+                            FROM filme<br>
+                            LEFT JOIN regisseure <br>
+                            &nbsp;&nbsp;ON filme.regisseur_id = regisseure.id;
+                        </p>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded-lg border-l-4 border-[var(--color-secondary)] text-sm mb-4">
+                        <strong>Hinweis:</strong> Wenn es keinen passenden Regisseur gibt, wird in der Spalte für den Regisseur <code>NULL</code> angezeigt.
+                    </div>
+                `,
+                controls: [
+                    { label: "Nur Filme zeigen", action: () => { resetData(); updateJoinViz(null); }, query: "SELECT * FROM filme;" },
+                    { 
+                        label: "LEFT JOIN (Filme + Regisseure)", 
+                        action: () => { 
+                            const directors = {
+                                1: "Christopher Nolan", 2: "John Lasseter", 3: "Quentin Tarantino",
+                                4: "Lana & Lilly Wachowski", 5: "Robert Zemeckis", 6: "Bong Joon-ho",
+                                7: "Anthony & Joe Russo", 8: "Rob Minkoff", 9: "Todd Phillips",
+                                10: "Steven Spielberg", 11: "Martin Scorsese"
+                            };
+                            
+                            currentColumns = ['titel', 'genre', 'regisseur_name'];
+                            currentData = rawData.map(r => ({ 
+                                titel: r.titel, 
+                                genre: r.genre, 
+                                regisseur_name: directors[r.regisseur_id] || "NULL" 
+                            })); 
+                            renderTable(); 
+                            updateJoinViz('left');
+                        }, 
+                        query: "SELECT filme.titel, filme.genre, regisseure.name AS regisseur_name\nFROM filme\nLEFT JOIN regisseure\nON filme.regisseur_id = regisseure.id;" 
+                    }
+                ]
+            },
+            'rightjoin': {
+                title: "13. RIGHT JOIN",
+                content: `
+                    <p class="mb-4">
+                        Im Gegensatz zum <code>LEFT JOIN</code> gibt der <code><a href="https://mariadb.com/kb/en/joins/" target="_blank" class="hover:underline">RIGHT JOIN</a></code> <strong>alle Datensätze der rechten Tabelle</strong> zurück, selbst wenn sie links keine Entsprechung haben.
+                    </p>
+                    <div class="bg-white border border-gray-300 p-4 rounded-lg mb-6 shadow-sm">
+                        <h4 class="font-bold text-sm mb-2">Syntax</h4>
+                        <p class="text-sm font-mono leading-relaxed">
+                            SELECT filme.titel, regisseure.name<br>
+                            FROM filme<br>
+                            RIGHT JOIN regisseure <br>
+                            &nbsp;&nbsp;ON filme.regisseur_id = regisseure.id;
+                        </p>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded-lg border-l-4 border-[var(--color-secondary)] text-sm mb-4">
+                        <strong>Hinweis:</strong> Gibt es für einen Regisseur keinen Film in der linken Tabelle, steht bei den Film-Spalten <code>NULL</code>.
+                    </div>
+                `,
+                controls: [
+                    { label: "Nur Filme zeigen", action: () => { resetData(); updateJoinViz(null); }, query: "SELECT * FROM filme;" },
+                    { 
+                        label: "RIGHT JOIN (Regisseure + Filme)", 
+                        action: () => { 
+                            const matchingFilms = {
+                                1: "Inception", 2: "The Dark Knight", 3: "Interstellar",
+                                4: "Toy Story", 5: "Pulp Fiction", 6: "The Matrix",
+                                7: "Forrest Gump", 8: "Parasite", 9: "Avengers: Endgame",
+                                10: "Lion King", 11: "Joker", 12: "Tenet"
+                            };
+
+                            const rights = [
+                                { titel: "Inception", regisseur: "Christopher Nolan" },
+                                { titel: "The Dark Knight", regisseur: "Christopher Nolan" },
+                                { titel: "Interstellar", regisseur: "Christopher Nolan" },
+                                { titel: "Toy Story", regisseur: "John Lasseter" },
+                                { titel: "Pulp Fiction", regisseur: "Quentin Tarantino" },
+                                { titel: "The Matrix", regisseur: "Lana & Lilly Wachowski" },
+                                { titel: "Forrest Gump", regisseur: "Robert Zemeckis" },
+                                { titel: "Parasite", regisseur: "Bong Joon-ho" },
+                                { titel: "Avengers: Endgame", regisseur: "Anthony & Joe Russo" },
+                                { titel: "Lion King", regisseur: "Rob Minkoff" },
+                                { titel: "Joker", regisseur: "Todd Phillips" },
+                                { titel: "Tenet", regisseur: "Christopher Nolan" },
+                                { titel: "NULL", regisseur: "Steven Spielberg" }, // Regisseur ohne Film
+                                { titel: "NULL", regisseur: "Martin Scorsese" }
+                            ];
+                            
+                            currentColumns = ['titel', 'regisseur_name'];
+                            currentData = rights.map(r => ({ 
+                                titel: r.titel,
+                                regisseur_name: r.regisseur
+                            })); 
+                            renderTable(); 
+                            updateJoinViz('right');
+                        }, 
+                        query: "SELECT filme.titel, regisseure.name AS regisseur_name\nFROM filme\nRIGHT JOIN regisseure\nON filme.regisseur_id = regisseure.id;" 
+                    }
+                ]
+            },
+            'fulljoin': {
+                title: "14. FULL JOIN",
+                content: `
+                    <p class="mb-4">
+                        Ein <code>FULL OUTER JOIN</code> (oder abgekürzt <code>FULL JOIN</code>) kombiniert die Ergebnisse von <code>LEFT JOIN</code> und <code>RIGHT JOIN</code>. Es werden <strong>alle Datensätze beider Tabellen</strong> angezeigt.
+                    </p>
+                    <p class="mb-4">
+                        <em>Hinweis:</em> MariaDB/MySQL unterstützt das Schlüsselwort <code>FULL OUTER JOIN</code> nicht direkt, sondern wird durch ein <code>UNION</code> von <code>LEFT JOIN</code> und <code>RIGHT JOIN</code> realisiert.
+                    </p>
+                    <div class="bg-white border border-gray-300 p-4 rounded-lg mb-6 shadow-sm">
+                        <h4 class="font-bold text-sm mb-2">Syntax in MariaDB</h4>
+                        <p class="text-sm font-mono leading-relaxed">
+                            SELECT filme.titel, regisseure.name<br>
+                            FROM filme LEFT JOIN regisseure ON filme.regisseur_id = regisseure.id<br>
+                            UNION<br>
+                            SELECT filme.titel, regisseure.name<br>
+                            FROM filme RIGHT JOIN regisseure ON filme.regisseur_id = regisseure.id;
+                        </p>
+                    </div>
+                `,
+                controls: [
+                    { label: "Nur Filme zeigen", action: () => { resetData(); updateJoinViz(null); }, query: "SELECT * FROM filme;" },
+                    { 
+                        label: "FULL JOIN", 
+                        action: () => { 
+                            const fullData = [
+                                { titel: "Inception", regisseur: "Christopher Nolan" },
+                                { titel: "The Dark Knight", regisseur: "Christopher Nolan" },
+                                { titel: "Interstellar", regisseur: "Christopher Nolan" },
+                                { titel: "Toy Story", regisseur: "John Lasseter" },
+                                { titel: "Pulp Fiction", regisseur: "Quentin Tarantino" },
+                                { titel: "The Matrix", regisseur: "Lana & Lilly Wachowski" },
+                                { titel: "Forrest Gump", regisseur: "Robert Zemeckis" },
+                                { titel: "Parasite", regisseur: "NULL" }, // Film ohne Regisseur
+                                { titel: "Avengers: Endgame", regisseur: "Anthony & Joe Russo" },
+                                { titel: "Lion King", regisseur: "Rob Minkoff" },
+                                { titel: "Joker", regisseur: "Todd Phillips" },
+                                { titel: "Tenet", regisseur: "Christopher Nolan" },
+                                { titel: "NULL", regisseur: "Steven Spielberg" }, // Regisseur ohne Film
+                                { titel: "NULL", regisseur: "Martin Scorsese" } // Regisseur ohne Film
+                            ];
+                            
+                            currentColumns = ['titel', 'regisseur_name'];
+                            currentData = fullData.map(r => ({ 
+                                titel: r.titel,
+                                regisseur_name: r.regisseur
+                            })); 
+                            renderTable(); 
+                            updateJoinViz('full');
+                        }, 
+                        query: "SELECT filme.titel, regisseure.name AS regisseur_name\nFROM filme LEFT JOIN regisseure ON ...\nUNION\nSELECT filme.titel, regisseure.name\nFROM filme RIGHT JOIN regisseure ON ...;" 
+                    }
+                ]
+            },
             'summary': {
                 title: "Zusammenfassung & Quiz",
                 content: `
@@ -912,7 +1159,7 @@
                     <div id="mc-quiz" class="space-y-5 pb-4"></div>
                 `,
                 controls: [
-                    { label: "Alle Daten zurücksetzen", action: () => resetData(), query: "SELECT * FROM filme;" }
+                    { label: "Alle Daten zurücksetzen", action: () => { resetData(); updateJoinViz(null); }, query: "SELECT * FROM filme;" }
                 ]
             }
         };
@@ -992,6 +1239,9 @@
                 activeNav.setAttribute('aria-current', 'page');
             }
 
+            // Clear Join Viz when navigating
+            updateJoinViz(null);
+
             // Update Content Area
             const contentArea = document.getElementById('content-area');
             const data = sections[sectionId];
@@ -1002,6 +1252,8 @@
                 <div class="prose max-w-none text-base leading-relaxed">
                     ${data.content}
                 </div>
+                <!-- Interactive Joint Visualization Container (appended dynamically) -->
+                <div id="join-viz-container" class="hidden mt-8 min-h-[140px] flex items-center justify-center w-full"></div>
             `;
             
             contentArea.querySelectorAll('code').forEach(block => {
@@ -1096,7 +1348,96 @@
 
         // --- SQL Operations Logic ---
 
+        function showPreviewTable(table) {
+            document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('is-active'));
+            
+            const btnFilme = document.getElementById('btn-tab-filme');
+            const btnReg = document.getElementById('btn-tab-regisseure');
+            
+            if (table === 'filme') {
+                btnFilme.classList.add('bg-[var(--color-secondary)]');
+                btnFilme.classList.remove('bg-white');
+                btnReg.classList.add('bg-white');
+                btnReg.classList.remove('bg-[var(--color-secondary)]');
+                
+                currentData = [...rawData];
+                currentColumns = ['id', 'titel', 'jahr', 'genre', 'regisseur_id', 'rating'];
+                renderTable();
+                document.getElementById('query-display').innerHTML = Prism.highlight("SELECT * FROM filme;", Prism.languages.sql, 'sql');
+            } else if (table === 'regisseure') {
+                btnReg.classList.add('bg-[var(--color-secondary)]');
+                btnReg.classList.remove('bg-white');
+                btnFilme.classList.add('bg-white');
+                btnFilme.classList.remove('bg-[var(--color-secondary)]');
+                
+                currentData = [...regisseureData];
+                currentColumns = ['id', 'name', 'land'];
+                renderTable();
+                document.getElementById('query-display').innerHTML = Prism.highlight("SELECT * FROM regisseure;", Prism.languages.sql, 'sql');
+            }
+        }
+
+        function updateJoinViz(type) {
+            const container = document.getElementById('join-viz-container');
+            if(!container) return; // Prevent errors if container doesn't exist yet
+            
+            if(!type) {
+                container.innerHTML = '';
+                container.classList.add('hidden');
+                return;
+            }
+            container.classList.remove('hidden');
+
+            let fills = '';
+            if (type === 'inner') {
+                fills = `<circle cx="160" cy="70" r="60" fill="#ffd900" clip-path="url(#inner-clip)" />`;
+            } else if (type === 'left') {
+                fills = `<circle cx="90" cy="70" r="60" fill="#ffd900" />`;
+            } else if (type === 'right') {
+                fills = `<circle cx="160" cy="70" r="60" fill="#ffd900" />`;
+            } else if (type === 'full') {
+                fills = `
+                    <circle cx="90" cy="70" r="60" fill="#ffd900" />
+                    <circle cx="160" cy="70" r="60" fill="#ffd900" />
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="flex flex-col items-center bg-white p-4 border border-gray-200 rounded-lg shadow-sm w-full relative">
+                    <h4 class="font-bold text-xs uppercase tracking-widest text-gray-400 mb-4">Venn-Diagramm: ${type.toUpperCase()} JOIN</h4>
+                    <svg width="250" height="140" viewBox="0 0 250 140">
+                        <defs>
+                            <clipPath id="inner-clip">
+                                <circle cx="90" cy="70" r="60" />
+                            </clipPath>
+                        </defs>
+                        ${fills}
+                        
+                        <!-- Outlines (drawn on top) -->
+                        <circle cx="90" cy="70" r="60" fill="transparent" stroke="#000" stroke-width="2"/>
+                        <circle cx="160" cy="70" r="60" fill="transparent" stroke="#000" stroke-width="2"/>
+                        
+                        <!-- Inner Intersect Outline just for visual clarity on overlaps -->
+                        <circle cx="90" cy="70" r="60" fill="transparent" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+                        <circle cx="160" cy="70" r="60" fill="transparent" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+
+                        <text x="60" y="75" font-family="'Inter', sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#000">Filme</text>
+                        <text x="190" y="75" font-family="'Inter', sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#000">Regisseure</text>
+                    </svg>
+                </div>
+            `;
+        }
+
         function resetData() {
+            const btnFilme = document.getElementById('btn-tab-filme');
+            const btnReg = document.getElementById('btn-tab-regisseure');
+            if (btnFilme && btnReg) {
+                btnFilme.classList.add('bg-[var(--color-secondary)]');
+                btnFilme.classList.remove('bg-white');
+                btnReg.classList.add('bg-white');
+                btnReg.classList.remove('bg-[var(--color-secondary)]');
+            }
+
             currentData = [...rawData];
             currentColumns = ['titel', 'jahr', 'genre', 'rating'];
             renderTable();
