@@ -273,6 +273,7 @@
                 <li><a href="#leftjoin" id="nav-leftjoin" class="nav-item w-full text-left px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 transition-colors">12. LEFT JOIN</a></li>
                 <li><a href="#rightjoin" id="nav-rightjoin" class="nav-item w-full text-left px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 transition-colors">13. RIGHT JOIN</a></li>
                 <li><a href="#fulljoin" id="nav-fulljoin" class="nav-item w-full text-left px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 transition-colors">14. FULL JOIN</a></li>
+                <li><a href="#union" id="nav-union" class="nav-item w-full text-left px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 transition-colors">15. UNION</a></li>
             </ul>
             <!-- Gruppe: Abschluss -->
             <div class="px-6 pt-3 pb-1 border-t border-gray-100">
@@ -396,6 +397,7 @@
             <a href="#leftjoin"      onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">12. LEFT JOIN</a>
             <a href="#rightjoin"     onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">13. RIGHT JOIN</a>
             <a href="#fulljoin"      onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">14. FULL JOIN</a>
+            <a href="#union"         onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">15. UNION</a>
             <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mt-4 mb-2">Abschluss</p>
             <a href="#summary"       onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">Zusammenfassung &amp; Quiz</a>
         </nav>
@@ -1117,6 +1119,102 @@
                     }
                 ]
             },
+            'union': {
+                title: "15. UNION",
+                content: `
+                    <p class="mb-4">
+                        Mit <code><a href="https://mariadb.com/kb/en/union/" target="_blank" class="hover:underline">UNION</a></code> kannst du die Ergebnisse von <strong>zwei oder mehr SELECT-Abfragen</strong> zu einer einzigen Ergebnistabelle zusammenführen.
+                    </p>
+                    <div class="bg-white border border-gray-300 p-4 rounded-lg mb-6 shadow-sm">
+                        <h4 class="font-bold text-sm mb-2">Syntax</h4>
+                        <p class="text-sm font-mono leading-relaxed">
+                            SELECT spalte FROM tabelle1<br>
+                            UNION<br>
+                            SELECT spalte FROM tabelle2;
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-gray-100 p-3 rounded border border-gray-300">
+                            <span class="block font-bold text-sm mb-1">UNION</span>
+                            <span class="text-xs">Entfernt <strong>Duplikate</strong> automatisch aus dem Ergebnis.</span>
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded border border-gray-300">
+                            <span class="block font-bold text-sm mb-1">UNION ALL</span>
+                            <span class="text-xs">Behält <strong>alle</strong> Zeilen – auch doppelte.</span>
+                        </div>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded-lg border-l-4 border-[var(--color-secondary)] text-sm mb-4">
+                        <strong>Wichtige Regel:</strong> Beide SELECT-Abfragen müssen die <strong>gleiche Anzahl an Spalten</strong> haben und die Datentypen müssen kompatibel sein.
+                    </div>
+                    <div class="bg-white border border-gray-300 p-4 rounded-lg mb-6 shadow-sm">
+                        <h4 class="font-bold text-sm mb-2">Typische Anwendungen</h4>
+                        <ul class="list-disc list-inside text-sm space-y-1">
+                            <li>Daten aus verschiedenen Tabellen zusammenführen</li>
+                            <li>Ergebnisse aus verschiedenen Filterbedingungen kombinieren</li>
+                            <li>FULL JOIN in MariaDB/MySQL simulieren (LEFT JOIN + UNION + RIGHT JOIN)</li>
+                        </ul>
+                    </div>
+                `,
+                controls: [
+                    { label: "Reset", action: () => { resetData(); updateJoinViz(null); }, query: "SELECT * FROM filme;" },
+                    { 
+                        label: "UNION (Action + Crime)", 
+                        action: () => { 
+                            const actionFilme = rawData.filter(r => r.genre === 'Action');
+                            const crimeFilme = rawData.filter(r => r.genre === 'Crime');
+                            // UNION: combine and remove duplicates
+                            const combined = [...actionFilme];
+                            crimeFilme.forEach(cf => {
+                                if (!combined.some(af => af.id === cf.id)) combined.push(cf);
+                            });
+                            currentColumns = ['titel', 'genre', 'rating'];
+                            currentData = combined;
+                            renderTable(); 
+                        }, 
+                        query: "SELECT titel, genre, rating FROM filme WHERE genre = 'Action'\nUNION\nSELECT titel, genre, rating FROM filme WHERE genre = 'Crime';" 
+                    },
+                    { 
+                        label: "UNION ALL (mit Duplikaten)", 
+                        action: () => { 
+                            const actionFilme = rawData.filter(r => r.genre === 'Action');
+                            const highRated = rawData.filter(r => r.rating >= 8.7);
+                            // UNION ALL: keep all rows including duplicates
+                            const combined = [...actionFilme, ...highRated];
+                            currentColumns = ['titel', 'genre', 'rating'];
+                            currentData = combined;
+                            renderTable(); 
+                        }, 
+                        query: "SELECT titel, genre, rating FROM filme WHERE genre = 'Action'\nUNION ALL\nSELECT titel, genre, rating FROM filme WHERE rating >= 8.7;" 
+                    },
+                    { 
+                        label: "UNION (ohne Duplikate)", 
+                        action: () => { 
+                            const actionFilme = rawData.filter(r => r.genre === 'Action');
+                            const highRated = rawData.filter(r => r.rating >= 8.7);
+                            // UNION: combine and remove duplicates by id
+                            const combined = [...actionFilme];
+                            highRated.forEach(hr => {
+                                if (!combined.some(af => af.id === hr.id)) combined.push(hr);
+                            });
+                            currentColumns = ['titel', 'genre', 'rating'];
+                            currentData = combined;
+                            renderTable(); 
+                        }, 
+                        query: "SELECT titel, genre, rating FROM filme WHERE genre = 'Action'\nUNION\nSELECT titel, genre, rating FROM filme WHERE rating >= 8.7;" 
+                    },
+                    { 
+                        label: "Filme + Regisseure (UNION)", 
+                        action: () => { 
+                            const filmeNamen = rawData.map(r => ({ name: r.titel, quelle: 'Film' }));
+                            const regNamen = regisseureData.map(r => ({ name: r.name, quelle: 'Regisseur' }));
+                            currentColumns = ['name', 'quelle'];
+                            currentData = [...filmeNamen, ...regNamen];
+                            renderTable(); 
+                        }, 
+                        query: "SELECT titel AS name, 'Film' AS quelle FROM filme\nUNION ALL\nSELECT name, 'Regisseur' AS quelle FROM regisseure;" 
+                    }
+                ]
+            },
             'summary': {
                 title: "Zusammenfassung & Quiz",
                 content: `
@@ -1569,6 +1667,17 @@
                 ],
                 correct: 3,
                 hint: "Auswertung von innen nach außen: <code>TRIM</code> entfernt die Leerzeichen → <code>'sky'</code>, <code>UPPER</code> schreibt groß → <code>'SKY'</code>, <code>LEFT(..., 2)</code> nimmt die ersten 2 Zeichen → <code>'SK'</code>."
+            },
+            {
+                q: "Was ist der Unterschied zwischen <code>UNION</code> und <code>UNION ALL</code>?",
+                options: [
+                    "<code>UNION ALL</code> sortiert die Ergebnisse, <code>UNION</code> nicht",
+                    "<code>UNION</code> entfernt Duplikate, <code>UNION ALL</code> behält alle Zeilen",
+                    "<code>UNION</code> kann nur zwei Tabellen verbinden, <code>UNION ALL</code> beliebig viele",
+                    "Es gibt keinen Unterschied – beide machen das Gleiche"
+                ],
+                correct: 1,
+                hint: "<code>UNION</code> kombiniert Ergebnisse und entfernt automatisch doppelte Zeilen. <code>UNION ALL</code> behält alle Zeilen bei – auch Duplikate."
             }
         ];
 
