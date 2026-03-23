@@ -329,18 +329,22 @@
             <div id="simulation-area" class="w-full lg:w-7/12 bg-white border-l border-[#e2e8f0] flex-col h-full md:h-[600px] lg:h-full hidden md:flex shrink-0">
                 
                 <!-- Simulation Header -->
-                <div class="p-4 border-b border-[#e2e8f0] bg-[#f8fafc] flex justify-between items-center">
-                    <div class="flex items-center gap-2">
-                        <span style="color: var(--color-primary)" class="font-bold text-sm hidden lg:inline">Tabellen:</span>
-                        <button onclick="showPreviewTable('filme')" id="btn-tab-filme" class="px-3 py-1 rounded text-xs font-bold border-2 border-[var(--color-primary)] text-[var(--color-primary)] bg-[var(--color-secondary)] shadow-[2px_2px_0_0_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none transition">tabelle: filme</button>
-                        <button onclick="showPreviewTable('regisseure')" id="btn-tab-regisseure" class="px-3 py-1 rounded text-xs font-bold border-2 border-[var(--color-primary)] text-[var(--color-primary)] bg-white hover:bg-[var(--color-secondary)] shadow-[2px_2px_0_0_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none transition">tabelle: regisseure</button>
+                <div class="p-4 border-b border-[#e2e8f0] bg-[#f8fafc] flex justify-between items-center shadow-sm z-10 relative">
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2 text-[var(--color-primary)]">
+                            <span class="text-xl">👩‍🔬</span>
+                            <span class="font-bold text-sm hidden lg:inline">SQL Labor</span>
+                        </div>
+                        <div class="h-6 w-px bg-gray-300 mx-1"></div>
+                        <button onclick="showFloatingWindow('float-filme')" class="text-[11px] font-bold px-3 py-1.5 rounded-md border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 opacity-90 hover:opacity-100 transition-colors shadow-sm flex items-center gap-1 active:translate-y-px"><span class="text-sm">🪟</span> filme</button>
+                        <button onclick="showFloatingWindow('float-regisseure')" class="text-[11px] font-bold px-3 py-1.5 rounded-md border border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 opacity-90 hover:opacity-100 transition-colors shadow-sm flex items-center gap-1 active:translate-y-px"><span class="text-sm">🪟</span> regisseure</button>
                     </div>
-                    <button onclick="resetData()" class="text-xs font-semibold px-2 py-1 rounded text-[#054e6f] hover:bg-[#e0f2fe]">Reset Simulation</button>
+                    <button onclick="resetData()" title="Setzt die aktuelle Simulation zurück aufs Original" class="text-xs font-bold px-3 py-1.5 rounded-md text-[var(--color-primary)] bg-gray-200 hover:bg-[var(--color-secondary)] transition-colors shadow-sm active:translate-y-px">↺ Reset View</button>
                 </div>
 
                 <!-- Controls & visualization -->
                 <div class="flex-1 overflow-y-auto p-6 space-y-6">
-                    
+
                     <!-- Query Builder Display -->
                     <div style="background-color: var(--color-primary); border-left: 6px solid var(--color-secondary);" class="rounded-lg p-4 font-mono text-sm text-white shadow-md">
                         <div class="text-xs text-[#7cd7c2] mb-2 uppercase tracking-wide font-bold">Aktueller Query</div>
@@ -414,6 +418,40 @@
             <p class="text-[10px] font-bold uppercase tracking-widest text-[#94a3b8] mt-6 mb-2 border-t border-white/10 pt-4 mx-8">Abschluss</p>
             <a href="#summary" onclick="toggleMobileMenu()" class="block text-[15px] py-2 px-4 bg-[var(--color-secondary)]/10 text-[var(--color-primary)] border border-[var(--color-secondary)] hover:bg-[var(--color-secondary)] rounded-lg mx-2 transition-colors">Zusammenfassung &amp; Quiz</a>
         </nav>
+    </div>
+
+    <!-- Floating Window: Filme -->
+    <div id="float-filme" class="floating-window fixed top-20 right-10 w-[450px] max-w-[90vw] bg-white rounded-xl shadow-2xl border border-indigo-200 z-[100] flex flex-col hidden bg-opacity-95 backdrop-blur-md" style="box-shadow: 0 25px 50px -12px rgba(67, 56, 202, 0.25);">
+        <div class="bg-indigo-600/90 backdrop-blur-sm cursor-move text-white p-3 rounded-t-xl flex justify-between items-center select-none" id="drag-filme">
+            <h4 class="font-bold text-sm tracking-wider flex items-center gap-2">🗄️ Tabelle: filme</h4>
+            <div class="flex gap-2">
+                <button onclick="toggleMinimize('float-filme-body')" class="w-6 h-6 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center font-bold text-white transition-colors">-</button>
+                <button onclick="hideFloatingWindow('float-filme')" class="w-6 h-6 rounded-full bg-red-500/80 hover:bg-red-500 flex items-center justify-center font-bold text-white transition-colors">&times;</button>
+            </div>
+        </div>
+        <div id="float-filme-body" class="p-0 overflow-y-auto max-h-[350px] custom-scrollbar bg-slate-50/90 rounded-b-xl border-t border-indigo-700 transition-all origin-top block">
+            <table class="w-full text-left text-xs text-slate-700 whitespace-nowrap">
+                <thead class="bg-slate-200 sticky top-0 shadow-sm"><tr class="uppercase text-slate-600 tracking-wider" id="raw-filme-header"></tr></thead>
+                <tbody class="divide-y divide-slate-200" id="raw-filme-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Floating Window: Regisseure -->
+    <div id="float-regisseure" class="floating-window fixed top-32 right-16 w-[350px] max-w-[90vw] bg-white rounded-xl shadow-2xl border border-emerald-200 z-[100] flex flex-col hidden bg-opacity-95 backdrop-blur-md" style="box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.25);">
+        <div class="bg-emerald-600/90 backdrop-blur-sm cursor-move text-white p-3 rounded-t-xl flex justify-between items-center select-none" id="drag-regisseure">
+            <h4 class="font-bold text-sm tracking-wider flex items-center gap-2">🗄️ Tabelle: regisseure</h4>
+            <div class="flex gap-2">
+                <button onclick="toggleMinimize('float-reg-body')" class="w-6 h-6 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center font-bold text-white transition-colors">-</button>
+                <button onclick="hideFloatingWindow('float-regisseure')" class="w-6 h-6 rounded-full bg-red-500/80 hover:bg-red-500 flex items-center justify-center font-bold text-white transition-colors">&times;</button>
+            </div>
+        </div>
+        <div id="float-reg-body" class="p-0 overflow-y-auto max-h-[350px] custom-scrollbar bg-slate-50/90 rounded-b-xl border-t border-emerald-700 transition-all origin-top block">
+            <table class="w-full text-left text-xs text-slate-700 whitespace-nowrap">
+                <thead class="bg-slate-200 sticky top-0 shadow-sm"><tr class="uppercase text-slate-600 tracking-wider" id="raw-reg-header"></tr></thead>
+                <tbody class="divide-y divide-slate-200" id="raw-reg-body"></tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -1406,7 +1444,129 @@
 
         // --- Core Functions ---
 
+        function initSourceTables() {
+            // Filme Table
+            const fHead = document.getElementById('raw-filme-header');
+            const fBody = document.getElementById('raw-filme-body');
+            const fCols = ['id', 'titel', 'jahr', 'genre', 'rating', 'regisseur_id'];
+            
+            if(fHead) fCols.forEach(col => fHead.innerHTML += `<th class="p-2 border-b bg-slate-50 font-bold tracking-wider">${col}</th>`);
+            
+            if(fBody) {
+                rawData.forEach(row => {
+                    let html = '<tr class="hover:bg-slate-50 transition-colors">';
+                    fCols.forEach(col => {
+                        let val = row[col] !== null ? row[col] : 'NULL';
+                        let style = row[col] === null ? 'text-red-500 italic font-bold' : '';
+                        html += `<td class="p-2 border-slate-100 border-r last:border-0"><span class="bg-slate-100 px-1 rounded font-mono ${style}">${val}</span></td>`;
+                    });
+                    html += '</tr>';
+                    fBody.innerHTML += html;
+                });
+            }
+
+            // Regisseure Table
+            const rHead = document.getElementById('raw-reg-header');
+            const rBody = document.getElementById('raw-reg-body');
+            const rCols = ['id', 'name', 'land'];
+
+            if(rHead) rCols.forEach(col => rHead.innerHTML += `<th class="p-2 border-b bg-slate-50 font-bold tracking-wider">${col}</th>`);
+            
+            if(rBody) {
+                regisseureData.forEach(row => {
+                    let html = '<tr class="hover:bg-slate-50 transition-colors">';
+                    rCols.forEach(col => {
+                        let val = row[col] !== null ? row[col] : 'NULL';
+                        html += `<td class="p-2 border-slate-100 border-r last:border-0"><span class="bg-slate-100 px-1 rounded font-mono">${val}</span></td>`;
+                    });
+                    html += '</tr>';
+                    rBody.innerHTML += html;
+                });
+            }
+        }
+
+        function makeDraggable(element, dragHandleId) {
+            if (!element) return;
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            const dragHandle = document.getElementById(dragHandleId);
+            
+            if (dragHandle) {
+                dragHandle.onmousedown = dragMouseDown;
+            } else {
+                element.onmousedown = dragMouseDown;
+            }
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                // Prevent drag if clicking a button (like minimize or close)
+                if(e.target.closest('button')) return;
+                
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+                
+                document.querySelectorAll('.floating-window').forEach(el => el.style.zIndex = '100');
+                element.style.zIndex = '110';
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                
+                // If the element used 'right' to position itself, we must set left physically before auto-ing right
+                if(element.style.right !== 'auto') {
+                    element.style.left = element.offsetLeft + "px";
+                    element.style.right = 'auto';
+                }
+                
+                element.style.top = (element.offsetTop - pos2) + "px";
+                element.style.left = (element.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        function toggleMinimize(bodyId) {
+            const body = document.getElementById(bodyId);
+            if(body) {
+                if(body.classList.contains('hidden')) {
+                    body.classList.remove('hidden');
+                } else {
+                    body.classList.add('hidden');
+                }
+            }
+        }
+        
+        function showFloatingWindow(winId) {
+            const win = document.getElementById(winId);
+            if(win) {
+                win.classList.remove('hidden');
+                document.querySelectorAll('.floating-window').forEach(el => el.style.zIndex = '100');
+                win.style.zIndex = '110';
+            }
+        }
+        
+        function hideFloatingWindow(winId) {
+            const win = document.getElementById(winId);
+            if(win) {
+                win.classList.add('hidden');
+            }
+        }
+
         function init() {
+            initSourceTables();
+            makeDraggable(document.getElementById('float-filme'), 'drag-filme');
+            makeDraggable(document.getElementById('float-regisseure'), 'drag-regisseure');
+            
             const hash = location.hash.slice(1);
             navigateTo(hash && sections[hash] ? hash : 'intro');
 
@@ -1587,36 +1747,6 @@
         }
 
         // --- SQL Operations Logic ---
-
-        function showPreviewTable(table) {
-            document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('is-active'));
-            
-            const btnFilme = document.getElementById('btn-tab-filme');
-            const btnReg = document.getElementById('btn-tab-regisseure');
-            
-            if (table === 'filme') {
-                btnFilme.classList.add('bg-[var(--color-secondary)]');
-                btnFilme.classList.remove('bg-white');
-                btnReg.classList.add('bg-white');
-                btnReg.classList.remove('bg-[var(--color-secondary)]');
-                
-                currentData = [...rawData];
-                currentColumns = ['id', 'titel', 'jahr', 'genre', 'regisseur_id', 'rating'];
-                renderTable();
-                document.getElementById('query-display').innerHTML = Prism.highlight("SELECT * FROM filme;", Prism.languages.sql, 'sql');
-            } else if (table === 'regisseure') {
-                btnReg.classList.add('bg-[var(--color-secondary)]');
-                btnReg.classList.remove('bg-white');
-                btnFilme.classList.add('bg-white');
-                btnFilme.classList.remove('bg-[var(--color-secondary)]');
-                
-                currentData = [...regisseureData];
-                currentColumns = ['id', 'name', 'land'];
-                renderTable();
-                document.getElementById('query-display').innerHTML = Prism.highlight("SELECT * FROM regisseure;", Prism.languages.sql, 'sql');
-            }
-        }
-
         function updateJoinViz(type) {
             const container = document.getElementById('join-viz-container');
             if(!container) return; // Prevent errors if container doesn't exist yet
