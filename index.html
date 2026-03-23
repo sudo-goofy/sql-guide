@@ -275,6 +275,13 @@
                 <li><a href="#fulljoin" id="nav-fulljoin" class="nav-item w-full text-left px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 transition-colors">14. FULL JOIN</a></li>
                 <li><a href="#union" id="nav-union" class="nav-item w-full text-left px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 transition-colors">15. UNION</a></li>
             </ul>
+            <!-- Gruppe: Aggregation -->
+            <div class="px-6 pt-3 pb-1 border-t border-gray-100">
+                <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Aggregation</span>
+            </div>
+            <ul class="space-y-1 mb-2">
+                <li><a href="#aggregate" id="nav-aggregate" class="nav-item w-full text-left px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 transition-colors">16. Aggregatfunktionen</a></li>
+            </ul>
             <!-- Gruppe: Abschluss -->
             <div class="px-6 pt-3 pb-1 border-t border-gray-100">
                 <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Abschluss</span>
@@ -398,6 +405,8 @@
             <a href="#rightjoin"     onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">13. RIGHT JOIN</a>
             <a href="#fulljoin"      onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">14. FULL JOIN</a>
             <a href="#union"         onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">15. UNION</a>
+            <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mt-4 mb-2">Aggregation</p>
+            <a href="#aggregate"     onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">16. Aggregatfunktionen</a>
             <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mt-4 mb-2">Abschluss</p>
             <a href="#summary"       onclick="toggleMobileMenu()" class="block text-lg p-2 hover:text-[var(--color-secondary)]">Zusammenfassung &amp; Quiz</a>
         </nav>
@@ -1212,6 +1221,135 @@
                             renderTable(); 
                         }, 
                         query: "SELECT titel AS name, 'Film' AS quelle FROM filme\nUNION ALL\nSELECT name, 'Regisseur' AS quelle FROM regisseure;" 
+                    }
+                ]
+            },
+            'aggregate': {
+                title: "16. Aggregatfunktionen",
+                content: `
+                    <p class="mb-6 leading-relaxed">
+                        Mit Aggregatfunktionen fassen wir mehrere Zeilen zu einem einzigen Wert zusammen. Das ist extrem wichtig für Statistiken und Auswertungen.
+                    </p>
+                    
+                    <div class="space-y-4 mb-8">
+                        <!-- Card 1: COUNT -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-200 hover:border-[var(--color-secondary)] transition-colors shadow-sm flex flex-col">
+                            <h4 class="font-bold text-[var(--color-primary)] mb-3 flex items-center gap-2 border-b border-gray-100 pb-2">
+                                <span class="text-xl">🔢</span> <a href="https://mariadb.com/kb/en/count/" target="_blank" class="hover:underline">COUNT</a> – Zählen
+                            </h4>
+                            <p class="text-sm text-gray-600 mb-3 flex-grow">Zählt die Anzahl der Zeilen in der Tabelle.</p>
+                            <div class="bg-gray-50 rounded p-3 text-xs text-gray-700">
+                                <ul class="space-y-2 list-disc ml-4 marker:text-gray-400">
+                                    <li><code class="font-bold text-[var(--color-primary)] bg-white px-1 border border-gray-200 rounded">COUNT(*)</code><br>Zählt <strong>alle</strong> Zeilen, inkl. "leerer" Zeilen.</li>
+                                    <li><code class="font-bold text-[var(--color-primary)] bg-white px-1 border border-gray-200 rounded">COUNT(spalte)</code><br>Zählt nur Zeilen, die <strong>nicht NULL</strong> sind.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: SUM & AVG -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-200 hover:border-[var(--color-secondary)] transition-colors shadow-sm flex flex-col relative overflow-hidden">
+                            <h4 class="font-bold text-[var(--color-primary)] mb-3 flex items-center gap-2 border-b border-gray-100 pb-2">
+                                <span class="text-xl">➕</span> <a href="https://mariadb.com/kb/en/sum/" target="_blank" class="hover:underline text-[var(--color-primary)]">SUM</a> & <a href="https://mariadb.com/kb/en/avg/" target="_blank" class="hover:underline text-[var(--color-primary)]">AVG</a> 
+                            </h4>
+                            <p class="text-sm text-gray-600 mb-3 flex-grow">Summe oder Durchschnitt. Sie <strong>ignorieren NULL komplett</strong>!</p>
+                            <div class="bg-blue-50 border border-blue-100 rounded p-3 text-xs text-blue-900 shadow-inner">
+                                <span class="block font-bold uppercase tracking-wider mb-2 text-blue-700">🧮 Profi-Tricks</span>
+                                <ul class="space-y-1.5 list-disc ml-4 marker:text-blue-400">
+                                    <li><strong>Rechnen:</strong> <code class="font-mono bg-white px-1 border border-blue-200 rounded text-blue-800">AVG(rating * 10)</code></li>
+                                    <li><strong>Kombinieren:</strong> <code class="font-mono bg-white px-1 border border-blue-200 rounded text-blue-800">SUM(rating) / COUNT(*)</code> (sicherer Durchschnitt, falls NULLs im Rating existieren)</li>
+                                    <li>Text liefert hierbei immer <code class="font-bold">0</code>.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: MIN & MAX -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-200 hover:border-[var(--color-secondary)] transition-colors shadow-sm flex flex-col">
+                            <h4 class="font-bold text-[var(--color-primary)] mb-3 flex items-center gap-2 border-b border-gray-100 pb-2">
+                                <span class="text-xl">📊</span> <a href="https://mariadb.com/kb/en/min/" target="_blank" class="hover:underline text-[var(--color-primary)]">MIN</a> & <a href="https://mariadb.com/kb/en/max/" target="_blank" class="hover:underline text-[var(--color-primary)]">MAX</a>
+                            </h4>
+                            <p class="text-sm text-gray-600 mb-3 flex-grow">Findet den kleinsten/größten Wert und ignoriert NULL.</p>
+                            <div class="bg-purple-50 border border-purple-100 rounded p-3 text-xs text-purple-900 mt-auto shadow-inner">
+                                <span class="block font-bold uppercase tracking-wider mb-2 text-purple-700">🔤 Profi-Tricks: Text</span>
+                                <p class="leading-relaxed">Diese Funktionen sortieren Texte <strong>alphabetisch</strong>! <code class="font-mono bg-white px-1 border border-purple-200 rounded text-purple-800">MIN(titel)</code> findet den ersten Film im Wörterbuch.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: VARIANCE -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-200 hover:border-[var(--color-secondary)] transition-colors shadow-sm flex flex-col">
+                            <h4 class="font-bold text-[var(--color-primary)] mb-3 flex items-center gap-2 border-b border-gray-100 pb-2">
+                                <span class="text-xl">📉</span> <a href="https://mariadb.com/kb/en/variance/" target="_blank" class="hover:underline text-[var(--color-primary)]">VARIANCE</a>
+                            </h4>
+                            <p class="text-sm text-gray-600 flex-grow">Misst die statistische Streuung (wie weit die Daten vom Durchschnitt abweichen).</p>
+                        </div>
+                    </div>
+
+                    <!-- Highlight Warning -->
+                    <div class="bg-[#FFF0F0] p-4 rounded-xl border-l-[6px] border-[#DC2626] shadow-sm mb-4">
+                        <h4 class="font-bold text-[#991B1B] text-base mb-1">🚨 Die universelle NULL-Falle</h4>
+                        <p class="text-[#7F1D1D] text-sm leading-relaxed">
+                            Mit Ausnahme von <code>COUNT(*)</code> tun Aggregatfunktionen so, als würden <code>NULL</code>-Werte überhaupt nicht existieren! 
+                            Wenn 5 von 10 Filmen kein Rating haben, teilt <code>AVG()</code> nur durch 5 (nicht durch 10).
+                        </p>
+                    </div>
+                `,
+                controls: [
+                    { label: "1. Reset (Gesamttabelle)", action: () => { resetData(); updateJoinViz(null); }, query: "SELECT * FROM filme;" },
+                    { 
+                        label: "2. Die NULL Falle (COUNT)", 
+                        action: () => { 
+                            currentColumns = ['Gesamtzeilen: COUNT(*)', 'Mit Regisseur: COUNT(regisseur_id)'];
+                            currentData = [{ 
+                                'Gesamtzeilen: COUNT(*)': rawData.length,
+                                'Mit Regisseur: COUNT(regisseur_id)': rawData.filter(r => r.regisseur_id !== null).length
+                            }];
+                            renderTable(); 
+                            updateJoinViz(null);
+                        }, 
+                        query: "SELECT COUNT(*), COUNT(regisseur_id) FROM filme;" 
+                    },
+                    { 
+                        label: "3. Zahlen (SUM, AVG, MIN, MAX)", 
+                        action: () => { 
+                            currentColumns = ['SUM', 'AVG', 'MIN', 'MAX'];
+                            const validRatings = rawData.filter(r => r.rating !== null).map(r => r.rating);
+                            const sum = validRatings.reduce((a, b) => a + b, 0);
+                            const avg = sum / validRatings.length;
+                            currentData = [{ 
+                                'SUM': sum.toFixed(1), 
+                                'AVG': avg.toFixed(2),
+                                'MIN': Math.min(...validRatings).toFixed(1),
+                                'MAX': Math.max(...validRatings).toFixed(1)
+                            }];
+                            renderTable(); 
+                        }, 
+                        query: "SELECT\n  SUM(rating),\n  AVG(rating),\n  MIN(rating),\n  MAX(rating)\nFROM filme;" 
+                    },
+                    { 
+                        label: "4. Texte finden (MIN/MAX)", 
+                        action: () => { 
+                            currentColumns = ['Alphabetisch 1. (MIN)', 'Alphabetisch letzter (MAX)'];
+                            const titles = [...rawData].map(r => r.titel).sort((a,b) => a.localeCompare(b));
+                            currentData = [{ 'Alphabetisch 1. (MIN)': titles[0], 'Alphabetisch letzter (MAX)': titles[titles.length - 1] }];
+                            renderTable(); 
+                        }, 
+                        query: "SELECT MIN(titel), MAX(titel) FROM filme;" 
+                    },
+                    { 
+                        label: "5. Profi-Berechnungen", 
+                        action: () => { 
+                            currentColumns = ['SUM/COUNT(*) (Stabiler AVG)', 'AVG(rating * 10)'];
+                            const validRatings = rawData.filter(r => r.rating !== null).map(r => r.rating);
+                            const sum = validRatings.reduce((a, b) => a + b, 0);
+                            const countAll = rawData.length; 
+                            const avgTimes10 = validRatings.reduce((a, b) => a + (b * 10), 0) / validRatings.length;
+
+                            currentData = [{ 
+                                'SUM/COUNT(*) (Stabiler AVG)': (sum / countAll).toFixed(3),
+                                'AVG(rating * 10)': avgTimes10.toFixed(1)
+                            }];
+                            renderTable(); 
+                        }, 
+                        query: "SELECT\n  SUM(rating) / COUNT(*),\n  AVG(rating * 10)\nFROM filme;" 
                     }
                 ]
             },
