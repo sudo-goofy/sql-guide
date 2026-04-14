@@ -269,8 +269,7 @@
             </div>
             <ul class="space-y-0.5 mb-1">
                 <li><a href="#joins" id="nav-joins" class="nav-item w-[calc(100%-1.5rem)] block text-left px-3 py-1.5 mx-3 rounded-md text-[13px] transition-colors">INNER JOIN</a></li>
-                <li><a href="#leftjoin" id="nav-leftjoin" class="nav-item w-[calc(100%-1.5rem)] block text-left px-3 py-1.5 mx-3 rounded-md text-[13px] transition-colors">LEFT JOIN</a></li>
-                <li><a href="#rightjoin" id="nav-rightjoin" class="nav-item w-[calc(100%-1.5rem)] block text-left px-3 py-1.5 mx-3 rounded-md text-[13px] transition-colors">RIGHT JOIN</a></li>
+                <li><a href="#outerjoins" id="nav-outerjoins" class="nav-item w-[calc(100%-1.5rem)] block text-left px-3 py-1.5 mx-3 rounded-md text-[13px] transition-colors">LEFT / RIGHT JOIN</a></li>
                 <li><a href="#fulljoin" id="nav-fulljoin" class="nav-item w-[calc(100%-1.5rem)] block text-left px-3 py-1.5 mx-3 rounded-md text-[13px] transition-colors">FULL JOIN</a></li>
                 <li><a href="#union" id="nav-union" class="nav-item w-[calc(100%-1.5rem)] block text-left px-3 py-1.5 mx-3 rounded-md text-[13px] transition-colors">UNION</a></li>
             </ul>
@@ -408,8 +407,7 @@
             
             <p class="text-[10px] font-bold uppercase tracking-widest text-[#94a3b8] mt-6 mb-2">Mehrere Tabellen</p>
             <a href="#joins" onclick="toggleMobileMenu()" class="block text-[15px] py-2 px-4 bg-white/5 border border-white/10 rounded-lg mx-2 mb-1.5 hover:bg-white/10 hover:text-white transition-colors text-gray-300">INNER JOIN</a>
-            <a href="#leftjoin" onclick="toggleMobileMenu()" class="block text-[15px] py-2 px-4 bg-white/5 border border-white/10 rounded-lg mx-2 mb-1.5 hover:bg-white/10 hover:text-white transition-colors text-gray-300">LEFT JOIN</a>
-            <a href="#rightjoin" onclick="toggleMobileMenu()" class="block text-[15px] py-2 px-4 bg-white/5 border border-white/10 rounded-lg mx-2 mb-1.5 hover:bg-white/10 hover:text-white transition-colors text-gray-300">RIGHT JOIN</a>
+            <a href="#outerjoins" onclick="toggleMobileMenu()" class="block text-[15px] py-2 px-4 bg-white/5 border border-white/10 rounded-lg mx-2 mb-1.5 hover:bg-white/10 hover:text-white transition-colors text-gray-300">LEFT / RIGHT JOIN</a>
             <a href="#fulljoin" onclick="toggleMobileMenu()" class="block text-[15px] py-2 px-4 bg-white/5 border border-white/10 rounded-lg mx-2 mb-1.5 hover:bg-white/10 hover:text-white transition-colors text-gray-300">FULL JOIN</a>
             <a href="#union" onclick="toggleMobileMenu()" class="block text-[15px] py-2 px-4 bg-white/5 border border-white/10 rounded-lg mx-2 mb-1.5 hover:bg-white/10 hover:text-white transition-colors text-gray-300">UNION</a>
             
@@ -1014,14 +1012,17 @@
                     }
                 ]
             },
-            'leftjoin': {
-                title: "12. LEFT JOIN",
+            'outerjoins': {
+                title: "12. LEFT / RIGHT JOIN",
                 content: `
                     <p class="mb-4">
                         Mit <code><a href="https://mariadb.com/kb/en/joins/" target="_blank" class="hover:underline">LEFT JOIN</a></code> werden <strong>alle Datensätze der linken Tabelle</strong> (in unserem Fall <code>filme</code>) angezeigt, auch wenn es in der rechten Tabelle (z. B. <code>regisseure</code>) keine Entsprechung gibt.
                     </p>
+                    <p class="mb-4">
+                        Im Gegensatz dazu gibt der <code>RIGHT JOIN</code> <strong>alle Datensätze der rechten Tabelle</strong> zurück, selbst wenn sie links keine Entsprechung haben.
+                    </p>
                     <div class="bg-white border border-gray-300 p-4 rounded-lg mb-6 shadow-sm">
-                        <h4 class="font-bold text-sm mb-2">Syntax</h4>
+                        <h4 class="font-bold text-sm mb-2">Syntax (Beispiel)</h4>
                         <p class="text-sm font-mono leading-relaxed">
                             SELECT filme.titel, regisseure.name<br>
                             FROM filme<br>
@@ -1030,7 +1031,7 @@
                         </p>
                     </div>
                     <div class="bg-yellow-50 p-3 rounded-lg border-l-4 border-[var(--color-secondary)] text-sm mb-4">
-                        <strong>Hinweis:</strong> Wenn es keinen passenden Regisseur gibt, wird in der Spalte für den Regisseur <code>NULL</code> angezeigt.
+                        <strong>Hinweis:</strong> Wenn es in der jeweils anderen Tabelle keinen passenden Eintrag gibt, wird in diesen Spalten <code>NULL</code> angezeigt.
                     </div>
                 `,
                 controls: [
@@ -1055,30 +1056,7 @@
                             updateJoinViz('left');
                         }, 
                         query: "SELECT filme.titel, filme.genre, regisseure.name AS regisseur_name\nFROM filme\nLEFT JOIN regisseure\nON filme.regisseur_id = regisseure.id;" 
-                    }
-                ]
-            },
-            'rightjoin': {
-                title: "13. RIGHT JOIN",
-                content: `
-                    <p class="mb-4">
-                        Im Gegensatz zum <code>LEFT JOIN</code> gibt der <code><a href="https://mariadb.com/kb/en/joins/" target="_blank" class="hover:underline">RIGHT JOIN</a></code> <strong>alle Datensätze der rechten Tabelle</strong> zurück, selbst wenn sie links keine Entsprechung haben.
-                    </p>
-                    <div class="bg-white border border-gray-300 p-4 rounded-lg mb-6 shadow-sm">
-                        <h4 class="font-bold text-sm mb-2">Syntax</h4>
-                        <p class="text-sm font-mono leading-relaxed">
-                            SELECT filme.titel, regisseure.name<br>
-                            FROM filme<br>
-                            RIGHT JOIN regisseure <br>
-                            &nbsp;&nbsp;ON filme.regisseur_id = regisseure.id;
-                        </p>
-                    </div>
-                    <div class="bg-yellow-50 p-3 rounded-lg border-l-4 border-[var(--color-secondary)] text-sm mb-4">
-                        <strong>Hinweis:</strong> Gibt es für einen Regisseur keinen Film in der linken Tabelle, steht bei den Film-Spalten <code>NULL</code>.
-                    </div>
-                `,
-                controls: [
-                    { label: "Nur Filme zeigen", action: () => { resetData(); updateJoinViz(null); }, query: "SELECT * FROM filme;" },
+                    },
                     { 
                         label: "RIGHT JOIN (Regisseure + Filme)", 
                         action: () => { 
@@ -1119,7 +1097,7 @@
                 ]
             },
             'fulljoin': {
-                title: "14. FULL JOIN",
+                title: "13. FULL JOIN",
                 content: `
                     <p class="mb-4">
                         Ein <code>FULL OUTER JOIN</code> (oder abgekürzt <code>FULL JOIN</code>) kombiniert die Ergebnisse von <code>LEFT JOIN</code> und <code>RIGHT JOIN</code>. Es werden <strong>alle Datensätze beider Tabellen</strong> angezeigt.
@@ -1173,7 +1151,7 @@
                 ]
             },
             'union': {
-                title: "15. UNION",
+                title: "14. UNION",
                 content: `
                     <p class="mb-4">
                         Mit <code><a href="https://mariadb.com/kb/en/union/" target="_blank" class="hover:underline">UNION</a></code> kannst du die Ergebnisse von <strong>zwei oder mehr SELECT-Abfragen</strong> zu einer einzigen Ergebnistabelle zusammenführen.
@@ -1269,7 +1247,7 @@
                 ]
             },
             'aggregate': {
-                title: "16. Aggregatfunktionen",
+                title: "15. Aggregatfunktionen",
                 content: `
                     <p class="mb-6 leading-relaxed">
                         Mit Aggregatfunktionen fassen wir mehrere Zeilen zu einem einzigen Wert zusammen. Das ist extrem wichtig für Statistiken und Auswertungen.
@@ -1393,12 +1371,12 @@
                             }];
                             renderTable(); 
                         }, 
-                        query: "SELECT\\n  SUM(rating) / COUNT(*),\\n  AVG(rating * 10)\\nFROM filme;" 
+                        query: "SELECT\n  SUM(rating) / COUNT(*),\n  AVG(rating * 10)\nFROM filme;" 
                     }
                 ]
             },
             'groupby': {
-                title: "17. GROUP BY & HAVING",
+                title: "16. GROUP BY & HAVING",
                 content: `
                     <p class="mb-6 leading-relaxed">
                         Mit <code><a href="https://mariadb.com/kb/en/group-by/" target="_blank" class="hover:underline">GROUP BY</a></code> lassen sich Zeilen gruppieren, die in einer oder mehreren Spalten dieselben Werte haben (z. B. "Wie viele Filme gibt es pro Genre?"). 
@@ -1458,7 +1436,7 @@
                             currentData = Object.keys(groups).map(g => ({ 'genre': g, 'Anzahl Filme (COUNT)': groups[g] })).sort((a,b) => a.genre.localeCompare(b.genre));
                             renderTable(); 
                         }, 
-                        query: "SELECT genre, COUNT(*)\\nFROM filme\\nGROUP BY genre;" 
+                        query: "SELECT genre, COUNT(*)\nFROM filme\nGROUP BY genre;" 
                     },
                     { 
                         label: "3. GROUP BY jahr, genre", 
@@ -1473,7 +1451,7 @@
                             currentData = Object.values(groups).map(g => ({ 'jahr': g.jahr, 'genre': g.genre, 'COUNT(*)': g.count })).sort((a,b) => b.jahr - a.jahr || a.genre.localeCompare(b.genre));
                             renderTable(); 
                         }, 
-                        query: "SELECT jahr, genre, COUNT(*)\\nFROM filme\\nGROUP BY jahr, genre\\nORDER BY jahr DESC;" 
+                        query: "SELECT jahr, genre, COUNT(*)\nFROM filme\nGROUP BY jahr, genre\nORDER BY jahr DESC;" 
                     },
                     { 
                         label: "4. HAVING AVG(rating) >= 8.5", 
@@ -1494,7 +1472,7 @@
                             }).filter(g => g._rawAvg >= 8.5).sort((a,b) => b._rawAvg - a._rawAvg);
                             renderTable(); 
                         }, 
-                        query: "SELECT genre, AVG(rating), COUNT(*)\\nFROM filme\\nGROUP BY genre\\nHAVING AVG(rating) >= 8.5;" 
+                        query: "SELECT genre, AVG(rating), COUNT(*)\nFROM filme\nGROUP BY genre\nHAVING AVG(rating) >= 8.5;" 
                     }
                 ]
             },
