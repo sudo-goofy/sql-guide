@@ -1389,9 +1389,9 @@
                                 <span class="text-xl">🗂️</span> Gruppieren nach einer Spalte
                             </h4>
                             <p class="text-sm text-gray-600 mb-3 block">Oft kombinieren wir <code>GROUP BY</code> mit Aggregatfunktionen wie <code>COUNT</code>, <code>SUM</code> oder <code>AVG</code>.</p>
-                            <code class="text-sm bg-gray-50 border border-gray-200 rounded p-2 block text-[var(--color-soft)]">
-                                SELECT genre, COUNT(*) FROM filme GROUP BY genre;
-                            </code>
+                            <pre><code class="text-sm bg-gray-50 border border-gray-200 rounded p-2 block text-[var(--color-soft)] whitespace-pre-wrap font-mono">SELECT genre, COUNT(*)
+FROM filme
+GROUP BY genre;</code></pre>
                         </div>
 
                         <!-- Card 2: GROUP BY Multiple Columns -->
@@ -1400,9 +1400,10 @@
                                 <span class="text-xl">📚</span> Gruppieren nach mehreren Spalten
                             </h4>
                             <p class="text-sm text-gray-600 mb-3 block">Du kannst auch nach mehreren Spalten gleichzeitig gruppieren. Dies ist wie eine verschachtelte Ordnerstruktur: zuerst nach Jahr, dann innerhalb des Jahres nach Genre.</p>
-                            <code class="text-sm bg-gray-50 border border-gray-200 rounded p-2 block text-[var(--color-soft)]">
-                                SELECT jahr, genre, COUNT(*) FROM filme GROUP BY jahr, genre;
-                            </code>
+                            <pre><code class="text-sm bg-gray-50 border border-gray-200 rounded p-2 block text-[var(--color-soft)] whitespace-pre-wrap font-mono">SELECT jahr, genre, COUNT(*)
+FROM filme
+GROUP BY jahr, genre;</code></pre>
+</pre>
                         </div>
 
                         <!-- Card 3: HAVING -->
@@ -1413,12 +1414,10 @@
                             <p class="text-sm text-gray-600 mb-3 block">
                                 Während <code>WHERE</code> filtern kann, <em>bevor</em> gruppiert wird, wird <code><a href="https://mariadb.com/kb/en/having/" target="_blank" class="hover:underline">HAVING</a></code> eingesetzt, um <em>nach</em> der Gruppierung zu filtern! Dadurch kannst du im <code>HAVING</code> Aggregatfunktionen verwenden (was bei <code>WHERE</code> einen Fehler auswerfen würde!).
                             </p>
-                            <div class="bg-blue-50 border border-blue-100 rounded p-3 text-xs text-blue-900 shadow-inner">
-                                <span class="block font-bold uppercase tracking-wider mb-2 text-blue-700">Beispiel</span>
-                                <code class="font-mono bg-white px-2 py-1.5 border border-blue-200 rounded text-blue-800 block">
-                                    SELECT genre, AVG(rating) FROM filme GROUP BY genre HAVING AVG(rating) >= 8.5;
-                                </code>
-                            </div>
+                            <pre><code class="text-sm bg-gray-50 border border-gray-200 rounded p-2 block text-[var(--color-soft)] whitespace-pre-wrap font-mono">SELECT genre, AVG(rating)
+FROM filme
+GROUP BY genre
+HAVING AVG(rating) >= 8.5;</code></pre>
                         </div>
                     </div>
                 `,
